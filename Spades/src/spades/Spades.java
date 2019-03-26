@@ -5,8 +5,7 @@
  */
 package spades;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 
 /**
  *
@@ -18,19 +17,9 @@ public class Spades {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        Card c1 = new Card(1, 5);
-        Card c2 = new Card(4, 2);
-        Deck d1 = null;
-        try {
-            d1 = new Deck();
-        } catch (Exception ex) {
-            System.out.println("ya done Goofed");
-        }
-        d1.printDeck();
-        System.out.println();
-        System.out.println();
-        d1.shuffleDeck();
-        d1.printDeck();
+        Game g = new Game();
+        g.deal();
+        g.displayHands();
         
     }
     

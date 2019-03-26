@@ -9,6 +9,8 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /**
@@ -20,9 +22,16 @@ public class Deck
     private Card deck[];
     int nextInd;
     
-    public Deck() throws Exception
+    /**
+     *
+     */
+    public Deck()
     {
-        buildDeck("CardList.txt");
+        try {
+            buildDeck("CardList.txt");
+        } catch (Exception ex) {
+            System.out.println("Bad File Name");
+        }
         nextInd = 0;
     }
     
@@ -76,7 +85,7 @@ public class Deck
         return temp;
     }
     
-    public void shuffle()
+    private void shuffleDeck()
     {
         Collections.shuffle(Arrays.asList(deck));
         Collections.shuffle(Arrays.asList(deck));
@@ -119,7 +128,11 @@ public class Deck
     {
         Card temp;
         if(nextInd == 52)
+        {
+            System.out.println("No More Cards");
             return null;
+        }
+            
         else
         {
             temp = deck[nextInd];
@@ -131,7 +144,7 @@ public class Deck
     
     public void resetDeck()
     {
-        shuffle();
+        shuffleDeck();
         nextInd = 0;
     }
 }
