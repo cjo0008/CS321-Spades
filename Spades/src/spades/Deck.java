@@ -6,8 +6,10 @@
 package spades;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Scanner;
-import java.util.Stack;
+
 
 /**
  *
@@ -16,12 +18,12 @@ import java.util.Stack;
 public class Deck 
 {
     private Card deck[];
-    int nextCard;
+    int nextInd;
     
-    public Deck(String fileName) throws Exception
+    public Deck() throws Exception
     {
-        buildDeck(fileName);
-        nextCard = 0;
+        buildDeck("CardList.txt");
+        nextInd = 0;
     }
     
     private Card buildCard(String info)
@@ -76,7 +78,8 @@ public class Deck
     
     public void shuffle()
     {
-        
+        Collections.shuffle(Arrays.asList(deck));
+        Collections.shuffle(Arrays.asList(deck));
     }
     
     private void buildDeck(String fileName) throws Exception
@@ -98,15 +101,37 @@ public class Deck
             {
                 deck[index] = c1;
                 index++;
-                System.out.println(index);
             }
                 
         }
-        
+       
+    }
+    
+    public void printDeck()
+    {
         for(int i = 0; i < 52; i++)
         {
             System.out.println(deck[i]);
         }
     }
     
+    public Card nextCard()
+    {
+        Card temp;
+        if(nextInd == 52)
+            return null;
+        else
+        {
+            temp = deck[nextInd];
+            nextInd++;
+            return temp;
+        }
+        
+    }
+    
+    public void resetDeck()
+    {
+        shuffle();
+        nextInd = 0;
+    }
 }

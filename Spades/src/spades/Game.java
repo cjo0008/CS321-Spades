@@ -9,6 +9,7 @@ package spades;
  *
  * @author xps8900
  */
-public class Game {
+public class Game 
+{
     
 }

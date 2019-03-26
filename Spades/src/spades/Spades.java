@@ -20,11 +20,17 @@ public class Spades {
     public static void main(String[] args) {
         Card c1 = new Card(1, 5);
         Card c2 = new Card(4, 2);
+        Deck d1 = null;
         try {
-            Deck d1 = new Deck("CardList.txt");
+            d1 = new Deck();
         } catch (Exception ex) {
             System.out.println("ya done Goofed");
         }
+        d1.printDeck();
+        System.out.println();
+        System.out.println();
+        d1.shuffleDeck();
+        d1.printDeck();
         
     }
     
