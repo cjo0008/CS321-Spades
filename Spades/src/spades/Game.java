@@ -40,6 +40,20 @@ public class Game
         
     }
     
+    public void playHands()
+    {
+        int numCards = 0;
+        while(numCards < 13)
+        {
+            
+            p1.playCard(numCards);
+            p2.playCard(numCards);
+            p3.playCard(numCards);
+            p4.playCard(numCards);
+            numCards++;
+        }
+    }
+    
     public void displayHands()
     {
         p1.printHand();

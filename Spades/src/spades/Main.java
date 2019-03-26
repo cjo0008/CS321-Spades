@@ -11,7 +11,7 @@ package spades;
  *
  * @author xps8900
  */
-public class Spades {
+public class Main {
 
     /**
      * @param args the command line arguments
@@ -19,6 +19,8 @@ public class Spades {
     public static void main(String[] args) {
         Game g = new Game();
         g.deal();
+        g.displayHands();
+        g.playHands();
         g.displayHands();
         
     }

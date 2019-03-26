@@ -47,6 +47,15 @@ public class Player
         }
     }
     
+    public void clearHand()
+    {
+        for(int i = 0; i < 13; i++)
+        {
+            hand[i] = null;
+        }
+        nextInd = 0;
+    }
+    
     
     
     
