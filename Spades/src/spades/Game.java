@@ -74,22 +74,7 @@ public class Game
     }
     
     
-    /*
-    Mostly just to make sure play card works
-    */
-    public void playHands()
-    {
-        int numCards = 0;
-        while(numCards < 13)
-        {
-            
-            p1.playCard(numCards);
-            p2.playCard(numCards);
-            p3.playCard(numCards);
-            p4.playCard(numCards);
-            numCards++;
-        }
-    }
+    
     // TODO Add error checking if the card can be played
     public boolean layCard(int playerNum, int cardNum)
     {
@@ -157,6 +142,27 @@ public class Game
     public void sortTest(){
         
         p1.sort();
+    }
+    
+    
+    
+    
+    /*
+    Mostly just to make sure play card works
+    Just for testing
+    */
+    public void playHands()
+    {
+        int numCards = 0;
+        while(numCards < 13)
+        {
+            
+            p1.playCard(numCards);
+            p2.playCard(numCards);
+            p3.playCard(numCards);
+            p4.playCard(numCards);
+            numCards++;
+        }
     }
     
 }
