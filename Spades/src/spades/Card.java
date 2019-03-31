@@ -70,6 +70,7 @@ public class Card {
     public String toString() 
     {
         String valI;
+        String suitS = "";
         switch (val)
         {
             case 11:
@@ -88,6 +89,25 @@ public class Card {
                 valI = val + "";
             
         }
-        return valI + " " + suit;
+        
+        switch (suit)
+        {
+            case 1:
+                suitS = "♥";
+                break;
+            case 2:
+                suitS = "♦";
+                break;
+            case 3:
+                suitS = "♣";
+                break;
+            case 4:
+                suitS = "♠";
+                break;
+            default:
+                suitS += "";
+                    
+        }
+        return valI + " " + suitS;
     }
 }

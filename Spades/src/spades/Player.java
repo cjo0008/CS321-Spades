@@ -5,6 +5,9 @@
  */
 package spades;
 
+import java.util.Arrays;
+import java.util.Collections;
+
 /**
  *
  * @author xps8900
@@ -59,7 +62,7 @@ public class Player
         }
         nextInd = 0;
     }
-    
+    // TODO change for following suit rules and leading trump
     public boolean canPlay(int cardNum)
     {
         if(hand[cardNum] != null)
@@ -105,6 +108,13 @@ public class Player
         }
         //printHand();
     } 
+    
+    public Card[] getHand()
+    {
+        Card temp[] = hand;
+        Collections.reverse(Arrays.asList(temp));
+        return temp;
+    }
     
 
     

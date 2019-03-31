@@ -5,6 +5,13 @@
  */
 package spades;
 
+import java.awt.EventQueue;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.JFrame;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+
 /**
  *
  * @author xps8900
@@ -14,8 +21,24 @@ public class Main {
     /**
      * @param args the command line arguments
      */
+    
+    public static void main(String[] args) {
+        GameFrame c1 = new GameFrame();
+    }
+
+   
+    
+    
+    
+    
+    
+    
+    /*
     public static void main(String[] args) {
         Game g = new Game();
+        Card c1 = new Card(1,5);
+       
+        
         g.newHand();
         g.displayHands();
         System.out.println("\n\n");
@@ -47,7 +70,8 @@ public class Main {
         /*
         g.playHands();
         g.displayHands();
-         */
+         
     }
+*/
 
 }
