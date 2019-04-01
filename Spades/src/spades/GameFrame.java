@@ -40,7 +40,7 @@ public class GameFrame {
                         hand.addCard(d1.nextCard());
                     }
                 }
-                players.get(0).printHand();
+                //players.get(0).printHand();
 
                 JFrame frame = new JFrame("Testing");
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

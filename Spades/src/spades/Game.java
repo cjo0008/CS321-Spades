@@ -17,6 +17,8 @@ import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,14 +32,14 @@ import javax.swing.JPanel;
 public class Game extends JPanel {
 
     private Player p1, p2, p3, p4;
-    private Deck gameDeck;
+    private final Deck gameDeck;
     private LinkedList<Card> middle;
     private List<Player> players;
     private Map<Card, Rectangle> mapCards;
     private Card selected;
 
     public Game() {
-        players = new ArrayList<Player>();
+        players = new ArrayList<>();
         p1 = new Player(1);
         players.add(p1);
         p2 = new Player(2);
@@ -46,20 +48,35 @@ public class Game extends JPanel {
         players.add(p3);
         p4 = new Player(4);
         players.add(p4);
-        middle = new LinkedList<Card>();
+        middle = new LinkedList<>();
 
         gameDeck = new Deck();
         gameDeck.resetDeck();
         deal();
 
         mapCards = new HashMap<>(players.size() * 5);
-
+        
+        
+        
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (selected != null) {
                     Rectangle bounds = mapCards.get(selected);
-                    bounds.y += 20;
+                    switch(selected.getOwner())
+                            {
+                                case 1:
+                                    bounds.y += 20;
+                                    break;
+                                case 2:
+                                    bounds.x += 20;
+                                    break;
+                                case 3:
+                                    bounds.y -=20;
+                                case 4:
+                                    bounds.x -= 20;
+                                    
+                            }
                     repaint();
 
                 }
@@ -67,20 +84,43 @@ public class Game extends JPanel {
                 // This is done backwards, as the last card is on
                 // top.  Of course you could render the cards
                 // in reverse order, but you get the idea
+                for(int i = 0; i < 4; i++){
+                    Card[] list = players.get(i).getHand();
+                    Collections.reverse(Arrays.asList(list));
+                    for (Card card : list) {
+                        Rectangle bounds = mapCards.get(card);
+                        if (bounds.contains(e.getPoint())) {
+                            selected = card;
+                            switch(selected.getOwner())
+                            {
+                                case 1:
+                                    bounds.y -= 20;
+                                    break;
+                                case 2:
+                                    bounds.x -= 20;
+                                    break;
+                                case 3:
+                                    bounds.y +=20;
+                                case 4:
+                                    bounds.x += 20;
+                                    
+                            }
+                            
+                            System.out.println(selected);
+                            repaint();
+                            break;
+                        }
 
-                for (Card card : players.get(0).getHand()) {
-                    Rectangle bounds = mapCards.get(card);
-                    if (bounds.contains(e.getPoint())) {
-                        selected = card;
-                        bounds.y -= 20;
-                        repaint();
-                        break;
                     }
                 }
             }
         });
+       
     }
-
+    
+    
+    
+    
     public void newHand() {
         resetHands();
         clearMiddle();
@@ -107,8 +147,7 @@ public class Game extends JPanel {
         players.get(1).sort();
         players.get(2).sort();
         players.get(3).sort();
-        players.get(0).printHand();
-
+        
     }
 
     private void resetHands() {
@@ -203,19 +242,86 @@ public class Game extends JPanel {
 
     @Override
     public void invalidate() {
-
+        int cardWidth, cardHeight, xDelta, xPos, yPos;
+        xPos = 0;
+        yPos = 0;
         super.invalidate();
         mapCards.clear();
-        Player hand = players.get(0);
-        int cardHeight = (getHeight() - 20) / 3;
-        int cardWidth = (int) (cardHeight * 0.6);
-        int xDelta = cardWidth / 2;
-        int xPos = (int) ((getWidth() / 2) - (cardWidth * (13 / 5.0)));
-        int yPos = (getHeight() - 20) - cardHeight;
-        for (Card card : hand.getHand()) {
-            Rectangle bounds = new Rectangle(xPos, yPos, cardWidth, cardHeight);
-            mapCards.put(card, bounds);
-            xPos += xDelta;
+        cardHeight = (getHeight() - 20) / 6;
+        cardWidth = (int) (cardHeight * 0.6);
+        int xPosTemp = 0;
+        int yPosTemp = 0;
+        xDelta = cardWidth / 3;
+        for(int i = 0; i < 4; i++){
+            switch (i)
+            {
+                    case 0:
+                    {
+                        
+                        
+                        xPos = (int) ((getWidth() / 2) - (cardWidth * (13 / 5.0)));
+                        yPos = (getHeight() - 20) - cardHeight;
+                        break;
+                    }
+                    case 1:
+                    {
+                        xPosTemp = xPos;
+                        cardWidth = (getHeight() - 20) / 6;
+                        cardHeight = (int) (cardWidth * 0.6);
+                        
+                        
+                        xPos = (getWidth() - 20) - cardWidth;
+                        yPos = yPos - cardHeight;
+                        break;
+                    }
+                    case 2:
+                    {
+                        yPosTemp = yPos;
+                        cardHeight = (getHeight() - 20) / 6;
+                        cardWidth = (int) (cardHeight * 0.6);
+                        
+                        xPos = xPosTemp+xDelta;
+                        yPos = 20;
+                        break;
+                    }
+                    case 3:
+                    {
+                        cardWidth = (getHeight() - 20) / 6;
+                        cardHeight = (int) (cardWidth * 0.6);
+                        
+                        
+                        xPos = 20;
+                        yPos = yPosTemp -xDelta;
+                        break;
+                    }
+                    default:
+                    {
+                        System.out.println("Case 2");
+                        xPos = 0;
+                        yPos = 0;
+                        xDelta = 5;
+                    }
+            }
+            Player p = players.get(i);
+            for (Card card : p.getHand()) {
+                switch (i)
+                {
+                    case 0:
+                        xPos += xDelta;
+                        break;
+                    case 1:
+                        yPos-= xDelta;
+                        break;
+                    case 2: 
+                        xPos -= xDelta;
+                        break;
+                    case 3:
+                        yPos += xDelta;
+                }
+                Rectangle bounds = new Rectangle(xPos, yPos, cardWidth, cardHeight);
+                mapCards.put(card, bounds);
+                
+            }
         }
     }
 
@@ -223,30 +329,59 @@ public class Game extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g.create();
-        Player hand = players.get(0);
-        for (Card card : hand.getHand()) {
-            Rectangle bounds = mapCards.get(card);
-            System.out.println(bounds);
-            if (bounds != null) {
-                g2d.setColor(Color.WHITE);
-                g2d.fill(bounds);
-                g2d.setColor(Color.GREEN);
-                g2d.draw(bounds);
-                Graphics2D copy = (Graphics2D) g2d.create();
-                paintCard(copy, card, bounds);
-                copy.dispose();
+       
+        for(int i = 0; i< 4; i++){
+            Player hand = players.get(i);
+            for (Card card : hand.getHand()) {
+                Rectangle bounds = mapCards.get(card);
+                //System.out.println(bounds);
+                if (bounds != null) {
+                    g2d.setColor(Color.WHITE);
+                    g2d.fill(bounds);
+                    g2d.setColor(Color.BLACK);
+                    g2d.draw(bounds);
+                   
+                    Graphics2D copy = (Graphics2D) g2d.create();
+                    paintCard(copy, card, bounds);
+                    copy.dispose();
+                }
             }
         }
         g2d.dispose();
     }
 
     protected void paintCard(Graphics2D g2d, Card card, Rectangle bounds) {
-        g2d.translate(bounds.x + 5, bounds.y + 5);
-        g2d.setClip(0, 0, bounds.width - 5, bounds.height - 5);
-
-        String text = card.toString();
-        System.out.println("We in here");
+        int cardOwner = card.getOwner();
         FontMetrics fm = g2d.getFontMetrics();
+        String text = card.toString();
+        switch (cardOwner)
+        {
+            case 1:
+                g2d.translate(bounds.x + 5, bounds.y + 5);
+                
+                break;
+            case 2:
+                g2d.translate(bounds.x + 5, bounds.y + bounds.height-fm.getDescent());
+                g2d.rotate(-Math.PI/2);
+                break;
+            case 3:
+                g2d.translate(bounds.x + bounds.width - 5, bounds.y + bounds.height-fm.getDescent());
+                g2d.rotate(Math.PI);
+                break;
+            case 4:
+                g2d.translate(bounds.x + bounds.width - 5, bounds.y + 5);
+                g2d.rotate(Math.PI/2);
+                break;
+                
+                
+        }
+        g2d.setClip(0, 0, bounds.width - 5, bounds.height - 5);
+        if(card.getSuit() <3)
+            g2d.setColor(Color.RED);
+
+        
+        //System.out.println("We in here");
+        
 
         g2d.drawString(text, 0, fm.getAscent());
     }

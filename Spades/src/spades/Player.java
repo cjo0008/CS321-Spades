@@ -111,7 +111,9 @@ public class Player
     
     public Card[] getHand()
     {
-        Card temp[] = hand;
+        Card temp[] = Arrays.copyOf(hand, 13);
+        
+        //System.out.println("\n\n");
         Collections.reverse(Arrays.asList(temp));
         return temp;
     }
