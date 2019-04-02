@@ -110,4 +110,10 @@ public class Card {
         }
         return valI + " " + suitS;
     }
+    
+    
+    public boolean equals(Card c1)
+    {
+        return (c1.getSuit() == suit) && (c1.getVal() == val);
+    }
 }
