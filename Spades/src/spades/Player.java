@@ -7,6 +7,7 @@ package spades;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.ArrayList;
 
 /**
  *
@@ -15,13 +16,13 @@ import java.util.Collections;
 public class Player 
 {
     private boolean myTurn;
-    private Card hand[];
+    private ArrayList<Card> hand;
     private int nextInd;
-    private int playerNum;
+    private final int playerNum;
     
     public Player(int num)
     {
-        hand = new Card[13];
+        hand = new ArrayList<>();
         myTurn = false;
         playerNum = num;
         nextInd = 0;
@@ -29,46 +30,33 @@ public class Player
     
     public boolean addCard(Card c1)
     {
-        if(nextInd >= 13)
+        if(hand.size() >= 13)
             return false;
         else{
             c1.setOwner(playerNum);
-            hand[nextInd] = c1;
+            hand.add(c1);
             nextInd++;
             return true;
         }
                     
     }
     
-    public Card playCard(int index)
+    public Card playCard(Card c1)
     {
-        Card temp;
-        if(index >= 13 || index < 0)
-            return null;
-        else
-        {
-            temp = hand[index];
-            hand[index] = null;
-            System.out.println(temp);
-            return temp;
-        }
+        if(canPlay(c1))
+            hand.remove(c1);
+        return c1;
     }
     
     public void clearHand()
     {
-        for(int i = 0; i < 13; i++)
-        {
-            hand[i] = null;
-        }
+        hand.clear();
         nextInd = 0;
     }
     // TODO change for following suit rules and leading trump
-    public boolean canPlay(int cardNum)
+    public boolean canPlay(Card c1)
     {
-        if(hand[cardNum] != null)
-            return true;
-        else
-            return false;
+       return hand.contains(c1);
     }
     
     
@@ -86,35 +74,37 @@ public class Player
     {
         for(int i = 0; i < 13; i++)
         {
-            System.out.println(hand[i]);
+            System.out.println(hand.get(i));
         }
     }
     
     public void sort() 
     { 
-        int n = hand.length; 
+        int n = hand.size(); 
         for (int i = 1; i < n; ++i) { 
-            Card key = hand[i]; 
+            Card key = hand.get(i); 
             int j = i - 1; 
   
             /* Move elements of arr[0..i-1], that are 
                greater than key, to one position ahead 
                of their current position */
-            while (j >= 0 && hand[j].sortGreater(key)) { 
-                hand[j + 1] = hand[j]; 
+            while (j >= 0 && hand.get(j).sortGreater(key)) { 
+                hand.set(j + 1, hand.get(j)); 
                 j = j - 1; 
             } 
-            hand[j + 1] = key; 
+            hand.set(j + 1, key); 
         }
+        
         //printHand();
     } 
     
-    public Card[] getHand()
+    public ArrayList<Card> getHand()
     {
-        Card temp[] = Arrays.copyOf(hand, 13);
+        ArrayList<Card> temp = new ArrayList<>(hand);
+        //Collections.copy(temp,hand);
         
         //System.out.println("\n\n");
-        Collections.reverse(Arrays.asList(temp));
+        //Collections.reverse(Arrays.asList(temp));
         return temp;
     }
     
