@@ -58,6 +58,15 @@ public class Player
     {
        return hand.contains(c1);
     }
+    public boolean hasSuit(int s)
+    {
+        for(Card c : hand){
+            if(c.getSuit() == s)
+                return true;
+        }
+        return false;
+    }
+    
     
     
     public void setTurn()
