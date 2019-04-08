@@ -35,10 +35,13 @@ public class Game extends JPanel {
     private List<Player> players;
     private Map<Card, Rectangle> mapCards;
     private Card selected;
+    private int currTurn;
+    private int winner;
 
     public Game() {
         players = new ArrayList<>();
         p1 = new Player(1);
+        currTurn = 1;
         players.add(p1);
         p2 = new Player(2);
         players.add(p2);
@@ -52,33 +55,24 @@ public class Game extends JPanel {
         gameDeck.resetDeck();
         deal();
 
-        mapCards = new HashMap<>(players.size() * 5);
+        mapCards = new HashMap<>(players.size() * 13);
 
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
+                
                 if (selected != null) {
                     Rectangle bounds = mapCards.get(selected);
-                    switch (selected.getOwner()) {
-                        case 1:
-                            bounds.y += 20;
-                            break;
-                        case 2:
-                            bounds.x += 20;
-                            break;
-                        case 3:
-                            bounds.y -= 20;
-                            break;
-                        case 4:
-                            bounds.x -= 20;
-                            break;
-
-                    }
+                    bounds = deselRec(bounds, selected.getOwner());
                     if (bounds.contains(e.getPoint())) {
-                        System.out.println("The Card: " + selected + " Has been Played");
+                        
                         System.out.println(players.get(selected.getOwner() - 1).canPlay(selected));
-                        if (layCard(selected)) {
-                            //System.out.println(findWinner());
+                        if (selected.getOwner() == currTurn) {
+                            if (layCard(selected)) {
+                                System.out.println("The Card: " + selected + " Has been Played");
+                                
+                                
+                            }
                         }
                     }
                     repaint();
@@ -88,36 +82,26 @@ public class Game extends JPanel {
                 // This is done backwards, as the last card is on
                 // top.  Of course you could render the cards
                 // in reverse order, but you get the idea
+                
                 for (int i = 0; i < 4; i++) {
                     ArrayList<Card> list = players.get(i).getHand();
                     Collections.reverse(list);
+
                     for (Card card : list) {
                         Rectangle bounds = mapCards.get(card);
-                        if (bounds.contains(e.getPoint())) {
+
+                        if (bounds.contains(e.getPoint()) && i == currTurn-1) {
                             selected = card;
-                            switch (selected.getOwner()) {
-                                case 1:
-                                    bounds.y -= 20;
-                                    break;
-                                case 2:
-                                    bounds.x -= 20;
-                                    break;
-                                case 3:
-                                    bounds.y += 20;
-                                    break;
-                                case 4:
-                                    bounds.x += 20;
-                                    break;
-
-                            }
-
-                            System.out.println("The Card: " + selected + "Has been Selected");
+                            bounds = selRec(bounds, selected.getOwner());
+                            
+                            System.out.println("The Card: " + selected + "Has been deselected");
                             repaint();
                             break;
                         }
 
                     }
                 }
+                
             }
         });
 
@@ -127,6 +111,44 @@ public class Game extends JPanel {
         resetHands();
         clearMiddle();
         deal();
+    }
+
+    private Rectangle selRec(Rectangle bounds, int owner) {
+        switch (owner) {
+            case 1:
+                bounds.y -= 20;
+                break;
+            case 2:
+                bounds.x -= 20;
+                break;
+            case 3:
+                bounds.y += 20;
+                break;
+            case 4:
+                bounds.x += 20;
+                break;
+
+        }
+        return bounds;
+    }
+
+    private Rectangle deselRec(Rectangle bounds, int owner) {
+        switch (owner) {
+            case 1:
+                bounds.y += 20;
+                break;
+            case 2:
+                bounds.x += 20;
+                break;
+            case 3:
+                bounds.y -= 20;
+                break;
+            case 4:
+                bounds.x -= 20;
+                break;
+
+        }
+        return bounds;
     }
 
     /*
@@ -164,7 +186,6 @@ public class Game extends JPanel {
         switch (c1.getOwner()) {
             case 1:
                 middle.add(players.get(0).playCard(c1));
-
                 break;
             case 2:
                 middle.add(players.get(1).playCard(c1));
@@ -178,6 +199,10 @@ public class Game extends JPanel {
 
         }
         invalidate();
+        currTurn++;
+        if (currTurn > 4) {
+            currTurn = 1;
+        }
         return allLaid();
 
     }
@@ -216,19 +241,22 @@ public class Game extends JPanel {
         System.out.println();
         p4.printHand();
     }
-
-    public void sortTest() {
-
-        p1.sort();
+    
+    private boolean allPlayed()
+    {
+        for(Player p : players){
+            if(p.numCards() != 0)
+                return false;
+        }
+        
+        return true;
     }
+    
+    
 
-    /*
-    Mostly just to make sure play card works
-    Just for testing
-     */
     @Override
     public Dimension getPreferredSize() {
-        return new Dimension(800, 800);
+        return new Dimension(600, 600);
     }
 
     @Override
@@ -306,7 +334,7 @@ public class Game extends JPanel {
 
             }
             // Middle Checking
-            int temp;
+
             for (Card c : middle) {
                 System.out.println("In Here");
                 int xPo = 0;
@@ -315,30 +343,30 @@ public class Game extends JPanel {
                     case 1:
                         cardHeight = (getHeight() - 20) / 6;
                         cardWidth = (int) (cardHeight * 0.6);
-                        
-                        xPo = getWidth() / 2 - cardWidth / 3;
-                        yPo = getHeight() / 2 + cardHeight / 3;
+
+                        xPo = getWidth() / 2 - cardWidth / 2;
+                        yPo = getHeight() / 2 + cardWidth;
                         //System.out.println("We here");
                         break;
                     case 2:
                         cardWidth = (getHeight() - 20) / 6;
                         cardHeight = (int) (cardWidth * 0.6);
-                        
-                        xPo = getWidth() / 2 + cardWidth / 3;
-                        yPo = getHeight() / 2;
+
+                        xPo = getWidth() / 2 + cardHeight;
+                        yPo = getHeight() / 2 - cardHeight / 2;
                         break;
                     case 3:
                         cardHeight = (getHeight() - 20) / 6;
                         cardWidth = (int) (cardHeight * 0.6);
-                        
-                        xPo = getWidth() / 2 -cardWidth/3;
-                        yPo = getHeight() / 2 - cardHeight/3;
+
+                        xPo = getWidth() / 2 - cardWidth / 2;
+                        yPo = getHeight() / 2 - cardHeight - cardWidth;
                         break;
                     case 4:
                         cardWidth = (getHeight() - 20) / 6;
                         cardHeight = (int) (cardWidth * 0.6);
-                        xPo = getWidth() / 2 -cardHeight/3-cardHeight;
-                        yPo = getHeight() / 2;
+                        xPo = getWidth() / 2 - cardWidth - cardHeight;
+                        yPo = getHeight() / 2 - cardHeight / 2;
                         break;
 
                 }
@@ -354,7 +382,12 @@ public class Game extends JPanel {
         super.paintComponent(g);
 
         Graphics2D g2d = (Graphics2D) g.create();
-
+        if(allLaid()){
+            winner = findWinner();
+            g2d.drawString("The winning player was: " + winner, 15,30);
+            currTurn = winner;
+        }
+        g2d.drawString("It is currently player " + currTurn + " turn", 15, 15);
         for (int i = 0; i < 4; i++) {
             Player hand = players.get(i);
             for (Card card : hand.getHand()) {
@@ -417,6 +450,8 @@ public class Game extends JPanel {
         if (card.getSuit() < 3) {
             g2d.setColor(Color.RED);
         }
+        else if(card.getSuit() == 3)
+            g2d.setColor(Color.CYAN);
 
         //System.out.println("We in here");
         g2d.drawString(text, 0, fm.getAscent());

@@ -108,6 +108,10 @@ public class Player
         return temp;
     }
     
+    public int numCards()
+    {
+        return hand.size();
+    }
 
     
 }
