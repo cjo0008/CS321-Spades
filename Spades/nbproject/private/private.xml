@@ -3,10 +3,18 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+<<<<<<< Updated upstream
             <file>file:/C:/Users/xps8900/Documents/College_UAH/2018-2019/CS321/CS321%20Spades/Spades/src/spades/Player.java</file>
             <file>file:/C:/Users/xps8900/Documents/College_UAH/2018-2019/CS321/CS321%20Spades/Spades/src/spades/Main.java</file>
             <file>file:/C:/Users/xps8900/Documents/College_UAH/2018-2019/CS321/CS321%20Spades/Spades/src/spades/GameFrame.java</file>
             <file>file:/C:/Users/xps8900/Documents/College_UAH/2018-2019/CS321/CS321%20Spades/Spades/src/spades/Game.java</file>
+=======
+            <file>file:/C:/Users/Dell_Owner/Documents/CS321-Spades/Spades/src/spades/GameFrame.java</file>
+            <file>file:/C:/Users/Dell_Owner/Documents/CS321-Spades/Spades/src/spades/Main.java</file>
+            <file>file:/C:/Users/Dell_Owner/Documents/CS321-Spades/Spades/src/spades/Game.java</file>
+            <file>file:/C:/Users/Dell_Owner/Documents/CS321-Spades/Spades/src/spades/Player.java</file>
+            <file>file:/C:/Users/Dell_Owner/Documents/CS321-Spades/Spades/src/spades/Card.java</file>
+>>>>>>> Stashed changes
         </group>
     </open-files>
 </project-private>

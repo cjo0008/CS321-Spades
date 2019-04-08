@@ -17,7 +17,6 @@ import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -78,7 +77,9 @@ public class Game extends JPanel {
                     if (bounds.contains(e.getPoint())) {
                         System.out.println("The Card: " + selected + " Has been Played");
                         System.out.println(players.get(selected.getOwner() - 1).canPlay(selected));
-                        layCard(selected);
+                        if (layCard(selected)) {
+                            //System.out.println(findWinner());
+                        }
                     }
                     repaint();
 
@@ -163,7 +164,7 @@ public class Game extends JPanel {
         switch (c1.getOwner()) {
             case 1:
                 middle.add(players.get(0).playCard(c1));
-                
+
                 break;
             case 2:
                 middle.add(players.get(1).playCard(c1));
@@ -227,7 +228,7 @@ public class Game extends JPanel {
      */
     @Override
     public Dimension getPreferredSize() {
-        return new Dimension(1000, 500);
+        return new Dimension(800, 800);
     }
 
     @Override
@@ -261,7 +262,7 @@ public class Game extends JPanel {
                 }
                 case 2: {
                     yPosTemp = yPos;
-                    System.out.println(yPosTemp);
+                    //System.out.println(yPosTemp);
                     cardHeight = (getHeight() - 20) / 6;
                     cardWidth = (int) (cardHeight * 0.6);
 
@@ -285,6 +286,7 @@ public class Game extends JPanel {
                 }
             }
             Player p = players.get(i);
+
             for (Card card : p.getHand()) {
                 switch (i) {
                     case 0:
@@ -303,18 +305,44 @@ public class Game extends JPanel {
                 mapCards.put(card, bounds);
 
             }
+            // Middle Checking
+            int temp;
             for (Card c : middle) {
                 System.out.println("In Here");
                 int xPo = 0;
                 int yPo = 0;
                 switch (c.getOwner()) {
                     case 1:
-                        xPo = 0;
-                        yPo = 0;
-                        System.out.println("We here");
+                        cardHeight = (getHeight() - 20) / 6;
+                        cardWidth = (int) (cardHeight * 0.6);
+                        
+                        xPo = getWidth() / 2 - cardWidth / 3;
+                        yPo = getHeight() / 2 + cardHeight / 3;
+                        //System.out.println("We here");
                         break;
-                }
+                    case 2:
+                        cardWidth = (getHeight() - 20) / 6;
+                        cardHeight = (int) (cardWidth * 0.6);
+                        
+                        xPo = getWidth() / 2 + cardWidth / 3;
+                        yPo = getHeight() / 2;
+                        break;
+                    case 3:
+                        cardHeight = (getHeight() - 20) / 6;
+                        cardWidth = (int) (cardHeight * 0.6);
+                        
+                        xPo = getWidth() / 2 -cardWidth/3;
+                        yPo = getHeight() / 2 - cardHeight/3;
+                        break;
+                    case 4:
+                        cardWidth = (getHeight() - 20) / 6;
+                        cardHeight = (int) (cardWidth * 0.6);
+                        xPo = getWidth() / 2 -cardHeight/3-cardHeight;
+                        yPo = getHeight() / 2;
+                        break;
 
+                }
+                // Switch card Width and height for cases 1 & 3 TODO************************
                 Rectangle bounds = new Rectangle(xPo, yPo, cardWidth, cardHeight);
                 mapCards.put(c, bounds);
             }
@@ -324,7 +352,7 @@ public class Game extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        
+
         Graphics2D g2d = (Graphics2D) g.create();
 
         for (int i = 0; i < 4; i++) {
@@ -393,6 +421,5 @@ public class Game extends JPanel {
         //System.out.println("We in here");
         g2d.drawString(text, 0, fm.getAscent());
     }
-    
-    
+
 }
