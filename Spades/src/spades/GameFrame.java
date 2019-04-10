@@ -28,7 +28,7 @@ public class GameFrame {
                 } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
                     ex.printStackTrace();
                 }
-
+                   /*
                 d1.resetDeck();
                 List<Player> players = new ArrayList<>(5);
                 for (int index = 1; index < 5; index++) {
@@ -41,10 +41,12 @@ public class GameFrame {
                     }
                 }
                 //players.get(0).printHand();
-
-                JFrame frame = new JFrame("Testing");
+                */
+                Game g1 = new Game();
+                JFrame frame = new JFrame("Lets Play Spades");
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                frame.add(new Game());
+                frame.add(g1, "Center");
+                frame.add(g1.getScoreboard(), "North");
                 frame.pack();
                 frame.setLocationRelativeTo(null);
                 frame.setVisible(true);

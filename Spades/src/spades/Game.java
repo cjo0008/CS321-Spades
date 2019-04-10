@@ -38,6 +38,8 @@ public class Game extends JPanel {
     private int currTurn;
     private int winner;
     private boolean spadeBroke;
+    private Scoreboard s1;
+    private boolean spadeError, suitError;
 
     public Game() {
         players = new ArrayList<>();
@@ -49,14 +51,15 @@ public class Game extends JPanel {
         gameDeck = new Deck();
         gameDeck.resetDeck();
         deal();
-
+        spadeError = suitError = false;
         mapCards = new HashMap<>(players.size() * 13);
         currTurn = 1;
+        s1 = new Scoreboard();
 
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-
+                
                 if (selected != null) {
                     Rectangle bounds = mapCards.get(selected);
                     bounds = deselRec(bounds, selected.getOwner());
@@ -175,26 +178,27 @@ public class Game extends JPanel {
     }
 
     private void resetHands() {
-        p1.clearHand();
-        p2.clearHand();
-        p3.clearHand();
-        p4.clearHand();
+        for(Player p: players)
+            p.clearHand();
     }
 
     // TODO Add error checking if the card can be played
     public boolean layCard(Card c1) 
     {
+        spadeError = suitError = false;
         int own = c1.getOwner();
         Player curr = players.get(own-1);
         Card lead = middle.peek();
         if (lead != null) {
             if (c1.getSuit() != lead.getSuit() && curr.hasSuit(lead.getSuit())) {
+                suitError = true;
                 System.out.println("Need to follow Suit");
                 return false;
 
             }
         }
         if(lead == null && c1.getSuit() == 4 && !spadeBroke){
+            spadeError = true;
             System.out.println("Spades hasn't been broken, can't leaad a spade");
             return false;
         }
@@ -221,6 +225,7 @@ public class Game extends JPanel {
         }
         if(c1.getSuit() == 4)
             spadeBroke = true;
+        s1.updateScore(5,5);
         return true;
 
     }
@@ -281,6 +286,7 @@ public class Game extends JPanel {
 
     @Override
     public void invalidate() {
+        
         int cardWidth, cardHeight, xDelta, xPos, yPos;
         xPos = 0;
         yPos = 0;
@@ -403,6 +409,10 @@ public class Game extends JPanel {
         Graphics2D g2d = (Graphics2D) g.create();
         displayWinner(g2d);
         g2d.drawString("It is currently player " + currTurn + " turn", 15, 15);
+        if(spadeError)
+            g2d.drawString("Spades not Broken", 15, getHeight()-50);
+        if(suitError)
+            g2d.drawString("Need to follow suit", 15, getHeight()-25);
         for (int i = 0; i < 4; i++) {
             Player hand = players.get(i);
             for (Card card : hand.getHand()) {
@@ -471,5 +481,11 @@ public class Game extends JPanel {
         //System.out.println("We in here");
         g2d.drawString(text, 0, fm.getAscent());
     }
-
+    
+    
+    
+    public Scoreboard getScoreboard()
+    {
+        return s1;
+    }
 }
