@@ -16,6 +16,7 @@ public class Scoreboard extends javax.swing.JPanel {
     private int team1Score;
     private int team2Score;
     private boolean newGame;
+    private Bids b;
     /**
      * Creates new form Scoreboard
      */
@@ -24,6 +25,7 @@ public class Scoreboard extends javax.swing.JPanel {
         team1Score = 0;
         team2Score = 0;
         newGame = false;
+        b = new Bids();
         
     }
 
@@ -36,17 +38,37 @@ public class Scoreboard extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jButton1 = new javax.swing.JButton();
+
+        jButton1.setText("Bid");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 618, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(548, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 45, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton1)
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        if(!b.hasBid())
+            b.bid();
+    }//GEN-LAST:event_jButton1ActionPerformed
     
     @Override
     protected void paintComponent(Graphics g)
@@ -59,15 +81,29 @@ public class Scoreboard extends javax.swing.JPanel {
         System.out.println("Yo");
     }
     
+    /*
+    This takes in the number of tricks one by each team in game and updates
+    the scoreboard with regards to their bid. 
+    */
     public void updateScore(int t1, int t2)
     {
+        
         team1Score += t1;
         team2Score += t2;
+        b = new Bids();
+        if(t1 + t2 != 13)
+            System.out.println("Thats not the 13 total number ot tricks won");
         repaint();
+    }
+    
+    public boolean doneBid()
+    {
+        return b.hasBid();
     }
     
             
             
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
     // End of variables declaration//GEN-END:variables
 }

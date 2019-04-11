@@ -19,7 +19,6 @@ import javax.swing.UnsupportedLookAndFeelException;
 public class GameFrame {
 
     public GameFrame() {
-        Deck d1 = new Deck();
         EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {

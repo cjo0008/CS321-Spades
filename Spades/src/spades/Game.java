@@ -29,32 +29,38 @@ import javax.swing.JPanel;
  */
 public class Game extends JPanel {
 
-    private Player p1, p2, p3, p4;
+    
     private Deck gameDeck;
     private LinkedList<Card> middle;
     private List<Player> players;
     private Map<Card, Rectangle> mapCards;
     private Card selected;
     private int currTurn;
-    private int winner;
+    
     private boolean spadeBroke;
     private Scoreboard s1;
-    private boolean spadeError, suitError;
-
+    private String errorMessage;
+    private int team1Tricks, team2Tricks;
+    private int winner;
+    
+    
     public Game() {
         players = new ArrayList<>();
         for(int i = 1; i < 5; i++)
             players.add(new Player(i));
         middle = new LinkedList<>();
         spadeBroke = false;
-
+        team1Tricks = team2Tricks = 0;
         gameDeck = new Deck();
         gameDeck.resetDeck();
+        winner = 0;
         deal();
-        spadeError = suitError = false;
+        errorMessage = "";
+        
         mapCards = new HashMap<>(players.size() * 13);
         currTurn = 1;
         s1 = new Scoreboard();
+        
 
         addMouseListener(new MouseAdapter() {
             @Override
@@ -67,6 +73,7 @@ public class Game extends JPanel {
 
                         System.out.println(players.get(selected.getOwner() - 1).canPlay(selected));
                         if (selected.getOwner() == currTurn) {
+                            
                             if (layCard(selected)) {
                                 System.out.println("The Card: " + selected + " Has been Played");
 
@@ -80,11 +87,8 @@ public class Game extends JPanel {
                 // This is done backwards, as the last card is on
                 // top.  Of course you could render the cards
                 // in reverse order, but you get the idea
-
-                if (allPlayed()) {
-                    newHand();
-                    return;
-                }
+                
+                
                 ArrayList<Card> list = players.get(currTurn - 1).getHand();
                 Collections.reverse(list);
 
@@ -101,15 +105,20 @@ public class Game extends JPanel {
                     }
 
                 }
+                
 
             }
+            
         });
+        
 
     }
 
-    public void newHand() {
+    private void newHand() {
         resetHands();
         clearMiddle();
+        s1.updateScore(team1Tricks, team2Tricks);
+        team1Tricks = team2Tricks = 0;
         deal();
         invalidate();
         currTurn = 1;
@@ -185,20 +194,27 @@ public class Game extends JPanel {
     // TODO Add error checking if the card can be played
     public boolean layCard(Card c1) 
     {
-        spadeError = suitError = false;
+        
+        
         int own = c1.getOwner();
         Player curr = players.get(own-1);
         Card lead = middle.peek();
+        if(!s1.doneBid())
+        {
+            System.out.println("You need to bid first");
+            errorMessage = "Bidding Hasn't occured";
+            return false;
+        }
         if (lead != null) {
             if (c1.getSuit() != lead.getSuit() && curr.hasSuit(lead.getSuit())) {
-                suitError = true;
+                errorMessage = "You need to follow Suit";
                 System.out.println("Need to follow Suit");
                 return false;
 
             }
         }
         if(lead == null && c1.getSuit() == 4 && !spadeBroke){
-            spadeError = true;
+            errorMessage = "Spades Has Not been Broken";
             System.out.println("Spades hasn't been broken, can't leaad a spade");
             return false;
         }
@@ -225,7 +241,7 @@ public class Game extends JPanel {
         }
         if(c1.getSuit() == 4)
             spadeBroke = true;
-        s1.updateScore(5,5);
+        errorMessage = " ";
         return true;
 
     }
@@ -273,8 +289,13 @@ public class Game extends JPanel {
     private void displayWinner(Graphics2D g2d)
     {
         if(allLaid()){
-            winner = findWinner();
+            int winner = findWinner();
+            if(winner%2 == 1)
+                team1Tricks++;
+            else
+                team2Tricks++;
             g2d.drawString("The winning player was: " + winner, 15,30);
+            
             currTurn = winner;
         }
     }
@@ -405,14 +426,16 @@ public class Game extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-
+        
         Graphics2D g2d = (Graphics2D) g.create();
         displayWinner(g2d);
+        if (allPlayed()) {
+            newHand();
+        }
         g2d.drawString("It is currently player " + currTurn + " turn", 15, 15);
-        if(spadeError)
-            g2d.drawString("Spades not Broken", 15, getHeight()-50);
-        if(suitError)
-            g2d.drawString("Need to follow suit", 15, getHeight()-25);
+        g2d.drawString("Team 1 has: " + team1Tricks + " tricks", 15, 50);
+        g2d.drawString("Team 2 has: " + team2Tricks + " tricks", 15, 70);
+        g2d.drawString(errorMessage, 15, getHeight()-25);
         for (int i = 0; i < 4; i++) {
             Player hand = players.get(i);
             for (Card card : hand.getHand()) {
@@ -444,7 +467,9 @@ public class Game extends JPanel {
                 copy.dispose();
             }
         }
-
+        
+        
+        
         g2d.dispose();
     }
 
