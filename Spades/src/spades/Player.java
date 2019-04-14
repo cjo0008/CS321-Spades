@@ -5,62 +5,95 @@
  */
 package spades;
 
-import java.util.Arrays;
-import java.util.Collections;
+
 import java.util.ArrayList;
 
 /**
- *
- * @author xps8900
+ * Creates a player with a hand of 13 cards
+ * @author Colin Oberthur
  */
 public class Player 
 {
-    private boolean myTurn;
-    private ArrayList<Card> hand;
-    private int nextInd;
-    private final int playerNum;
+   
+    private ArrayList<Card> hand; // the list of cards in this hand
     
+    private final int playerNum; // The player number of this player 1-4, for ownership of cards
+    
+    /**
+     * Creates a new player
+     * @param num the player number of this player 1-4
+     */
     public Player(int num)
     {
         hand = new ArrayList<>();
-        myTurn = false;
+        
         playerNum = num;
-        nextInd = 0;
+        
     }
     
+    /**
+     * Adds a card to the hand of the player
+     * @param c1 card to be added
+     * @return if the card was added sucessfully 
+     */
     public boolean addCard(Card c1)
     {
-        if(hand.size() >= 13)
+        if(hand.size() >= 13) // too many cards in the hand, can only be 13
             return false;
         else{
-            c1.setOwner(playerNum);
+            c1.setOwner(playerNum); // Sets the owner of the card to this player
             hand.add(c1);
-            nextInd++;
+            
             return true;
         }
                     
     }
     
+    /**
+     * Removes the card if it is in the list
+     * @param c1 the card to be played
+     * @return the card to be played if it can be
+     * 
+     */
     public Card playCard(Card c1)
     {
-        if(canPlay(c1))
+        Card c;
+        if(canPlay(c1)){
             hand.remove(c1);
-        return c1;
+            return c1;
+        }
+        else
+            return null;
     }
     
+    /**
+     * Clears the hand so a new one can be added
+     */
     public void clearHand()
     {
         hand.clear();
-        nextInd = 0;
+        
     }
-    // TODO change for following suit rules and leading trump
+   
+
+    /**
+     * If the card can be played, ie if the card exists in the hand
+     * @param c1 the card to be played
+     * @return if it exists in the hand
+     */
     public boolean canPlay(Card c1)
     {
        return hand.contains(c1);
     }
+
+    /**
+     *  Sees if the player has a suit, this is for following suit in the game
+     * @param s suit to be checked for
+     * @return if the suit exists
+     */
     public boolean hasSuit(int s)
     {
-        for(Card c : hand){
+        for(Card c : hand){ // Could have done a fancy search but nah
             if(c.getSuit() == s)
                 return true;
         }
@@ -69,16 +102,10 @@ public class Player
     
     
     
-    public void setTurn()
-    {
-        myTurn = !myTurn;
-    }
-    
-    public boolean isTurn()
-    {
-        return myTurn;
-    }
-    
+    /**
+     * Prints the hand as a string
+     * For testing reasons
+     */
     public void printHand()
     {
         for(int i = 0; i < 13; i++)
@@ -87,6 +114,9 @@ public class Player
         }
     }
     
+    /**
+     * Sorts the hand by suit, with an insertion sort
+     */
     public void sort() 
     { 
         int n = hand.size(); 
@@ -97,7 +127,7 @@ public class Player
             /* Move elements of arr[0..i-1], that are 
                greater than key, to one position ahead 
                of their current position */
-            while (j >= 0 && hand.get(j).sortGreater(key)) { 
+            while (j >= 0 && hand.get(j).sortGreater(key)) { // Uses the other sort method in Card
                 hand.set(j + 1, hand.get(j)); 
                 j = j - 1; 
             } 
@@ -107,9 +137,13 @@ public class Player
         //printHand();
     } 
     
+    /**
+     * Returns the list of cards in the hand
+     * @return a copied list of cards
+     */
     public ArrayList<Card> getHand()
     {
-        ArrayList<Card> temp = new ArrayList<>(hand);
+        ArrayList<Card> temp = new ArrayList<>(hand); // Copies so it doesn't break that rule
         //Collections.copy(temp,hand);
         
         //System.out.println("\n\n");
@@ -117,6 +151,10 @@ public class Player
         return temp;
     }
     
+    /**
+     *  How many cards are in the hand
+     * @return the number of cards
+     */
     public int numCards()
     {
         return hand.size();

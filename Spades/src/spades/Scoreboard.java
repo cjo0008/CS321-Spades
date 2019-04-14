@@ -7,15 +7,19 @@ package spades;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author xps8900
  */
 public class Scoreboard extends javax.swing.JPanel {
+    
+    private final int WINNING_SCORE = 500;
+    
     private int team1Score;
     private int team2Score;
-    private boolean newGame;
+    
     private Bids b;
     /**
      * Creates new form Scoreboard
@@ -24,7 +28,7 @@ public class Scoreboard extends javax.swing.JPanel {
         initComponents();
         team1Score = 0;
         team2Score = 0;
-        newGame = false;
+        
         b = new Bids();
         
     }
@@ -85,20 +89,79 @@ public class Scoreboard extends javax.swing.JPanel {
     This takes in the number of tricks one by each team in game and updates
     the scoreboard with regards to their bid. 
     */
-    public void updateScore(int t1, int t2)
+
+    /**
+     *
+     * @param t1Trick
+     * @param t2Trick
+     */
+
+    public void updateScore(int t1Trick, int t2Trick)
     {
-        
-        team1Score += t1;
-        team2Score += t2;
+        int t1Bid = b.team1Bid();
+        int t2Bid = b.team2Bid();
+        if(t1Bid <= t1Trick)
+            team1Score += t1Bid*10 + (t1Trick-t1Bid);
+        else
+            team1Score -= t1Bid*10;
+        if(t2Bid <= t2Trick)
+            team2Score += t2Bid*10 + (t2Trick-t1Bid);
+        else
+            team2Score -= t2Bid*10;
         b = new Bids();
-        if(t1 + t2 != 13)
+        if(t1Trick + t2Trick != 13)
             System.out.println("Thats not the 13 total number ot tricks won");
+        showWinner();
         repaint();
     }
+    /**
+     * Sees if a team has won
+     * @return the winning team or 0 if nobody has won
+     */
+    private int checkWinner()
+    {
+        if(team1Score > WINNING_SCORE && team1Score > team2Score)
+            return 1;
+        else if(team2Score > WINNING_SCORE && team1Score < team2Score)
+            return 2;
+        else
+            return 0;
+            
+    }
+    /**
+     * Makes a message if a team has won
+     */
+    private void showWinner()
+    {
+        if(win())
+            JOptionPane.showMessageDialog(null, "Congragulations to team " + checkWinner() + " You have won!!!");
+        
+    }
     
+    /**
+     * @return if a winner has been found
+     */
+    public boolean win()
+    {
+        return checkWinner() != 0;
+    }
+    
+    /**
+     * IF the bidding is finished
+     * @return
+     */
     public boolean doneBid()
     {
         return b.hasBid();
+    }
+    /**
+     * Resets the scores for a new game
+     */
+    public void reset()
+    {
+        team1Score = 0;
+        team2Score = 0;
+        b = new Bids();
     }
     
             

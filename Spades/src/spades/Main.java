@@ -9,11 +9,12 @@ package spades;
 
 /**
  *
- * @author xps8900
+ * @author Colin Oberthur
  */
 public class Main {
 
     /**
+     * Literally just creates a gameframe, thats it no fancy stuff
      * @param args the command line arguments
      */
     

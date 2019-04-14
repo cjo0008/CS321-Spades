@@ -8,16 +8,19 @@ package spades;
 import javax.swing.JOptionPane;
 
 /**
- *
+ * This is the bids class which is takes in all the bids of the players
  * @author xps8900
  */
-// TODO********** Write this to take in bids
+
 public class Bids 
 {
-    private int team1;
-    private int team2;
-    private boolean hasBid;
+    private int team1; // the total bid for team 1 players(1 and 3)
+    private int team2; // the total bid for team 2 players (2 and 4)
+    private boolean hasBid;// if the bidding has occured, necessary for the game
     
+    /**
+     * Creates a set of bids and initilizes the total bid to 0
+     */
     public Bids()
     {
         team1 = 0;
@@ -25,15 +28,31 @@ public class Bids
         hasBid = false;
                
     }
+
+    /**
+     * Returns the total bid for team 1
+     * @return the total bid 1-13
+     */
     public int team1Bid()
     {
         return team1;
     }
+
+    /**
+     * Returns the total bid for team 2
+     * @return the total bid 1-13
+     */
     public int team2Bid()
     {
         return team2;
     }
     
+    /**
+     * Starts the bidding
+     * Creates 4 seperate joptionpane windows for the bidding to occur
+     * Player1 always starts the bidding; 
+     * doesn't bid if it already has been done
+     */
     public void bid()
     {
         if(hasBid())
@@ -45,6 +64,10 @@ public class Bids
         hasBid = true;
     }
     
+    /**
+     * Returns if the bidding has already occured
+     * @return if the bidding is done
+     */
     public boolean hasBid()
     {
         return hasBid;
